@@ -4,7 +4,7 @@ import sqlite3
 import rfc3987
 import random
 import ipaddr
-from Database import Database as db
+from .Database import Database as db
 
 
 class Url():
@@ -30,10 +30,11 @@ class Url():
         h = db.query_db("select * from hits where short=? order by hitdate desc", [self.short])
         return []
 
-    def delete(self):
+    @staticmethod
+    def delete(short):
         d = db.get_db()
-        d.execute("delete from urls where short = ?", [self.short])
-        d.execute("delete from hits where short = ?", [self.short])
+        d.execute("delete from urls where short = ?", [short])
+        #d.execute("delete from hits where short = ?", [self.short])
         d.commit()
         return
 

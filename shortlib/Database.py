@@ -44,4 +44,4 @@ class Database():
             schema = f.read()
         d.cursor().executescript(schema)
         d.commit()
-        print "Empty database %s created" % (Database.path())
+        print("Empty database %s created" % (Database.path()))

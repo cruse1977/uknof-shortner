@@ -2,8 +2,8 @@
 
 import random
 from passlib.hash import pbkdf2_sha256
-from Database import Database as db
-from Url import Url
+from .Database import Database as db
+from .Url import Url
 
 
 class User():

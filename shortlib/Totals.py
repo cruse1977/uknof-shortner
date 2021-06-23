@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-from Database import Database as db
-from Url import Url
+from .Database import Database as db
+from .Url import Url
 
 
 class Totals():

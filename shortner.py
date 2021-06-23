@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from flask import Flask, render_template, request, redirect, flash, url_for, g, session, jsonify
-from flask.ext.login import LoginManager, login_required, login_user, logout_user, current_user
+from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 import random
 import os
 import json
@@ -12,7 +12,7 @@ VERSION = "0.0.4"
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-app.secret_key = ''.join(random.choice(string.lowercase) for i in range(16))
+app.secret_key = ''.join(random.choice(string.ascii_lowercase) for i in range(16))
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -27,7 +27,7 @@ def load_user(username):
 @app.before_request
 def before_request():
     g.user = current_user
-    print g.user
+    print(g.user)
 
 
 @app.route('/admin/about')
@@ -101,6 +101,15 @@ def admin_api_urls_create():
     u = Url.create(short, dest, g.user.username, custom=custom, notes=notes)
     return jsonify(success=True, short=u.short)
 
+@app.route('/admin/api/urls/delete', methods=['POST'])
+@login_required
+def admin_api_urls_delete():
+    if "short" not in request.json:
+        return jsonify(success=False)
+    shortcode = request.json["short"]
+    Url.delete(shortcode)
+    return jsonify(success=True, short=shortcode)
+
 
 @app.route('/admin/api/totals')
 @login_required
@@ -164,9 +173,7 @@ def index():
 if __name__ == '__main__':
 
     if Database.exists() is False:
-        print ""
-        print "Please run dbsetup.py"
-        print ""
+        print ("\nPlease run dbsetup.py\n\n")
         exit(1)
 
     app.debug = True
